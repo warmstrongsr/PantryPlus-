@@ -1,0 +1,66 @@
+body {
+	background-color: whitesmoke;
+    /* padding: 1em; */
+  
+}
+
+.span {
+  color: aliceblue;
+}
+#topright {
+    background-color: rgba(207, 161, 10, 0.7);
+    line-height: 12px;
+     width: 18px;
+     font-size: 8pt;
+     font-family: tahoma;
+     margin-top: 1px;
+     margin-right: 2px;
+     position:absolute;
+     top: -2px;;
+     right: -2px;;
+     border-color: orangered;
+
+}
+.hero-image {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(239, 230, 230, 0.791)), url(/images/rain-fall.jpg);
+	height: 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	/* background-position: center; */
+	position: relative;
+	background-position: 50% 55%;
+}
+
+
+.sunny {
+	background-color: darkgoldenrod;
+}
+
+.rainy,
+.partly cloudy {
+	background-color: #506378;
+}
+
+.snow {
+	background-color: cornsilk;
+}
+
+.card-body {
+	opacity: 0.;
+  
+
+}
+
+.circle {
+  height: 50px;
+  width: 50px;
+  background-color: #555;
+  border-radius: 70%;
+}
+
+card {
+
+  border-color: blue;
+
+}
+
