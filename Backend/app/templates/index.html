@@ -16,54 +16,11 @@
 
     <div class="container">
         
-        <div class="row mt-3">
-            <div class="col col-md-6 offset-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        Authorization Endpoints
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <span class="badge bg-warning">POST</span> /api/users
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-success">GET</span> /api/me *Token Auth Required
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-primary">PUT</span> /api/users/&lt;user_id&gt; *Token Auth Required
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-danger">DELETE</span> /api/users/&lt;user_id&gt; *Token Auth Required
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-warning">POST</span> /api/token *Basic Auth Required
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col col-md-6 offset-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        Blog Post Endpoints
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <span class="badge bg-warning">POST</span> /api/posts *Token Auth Required
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-success">GET</span> /api/posts
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-success">GET</span> /api/posts/&lt;post_id&gt;
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-primary">PUT</span> /api/posts/&lt;post_id&gt; *Token Auth Required
-                        </li>
-                        <li class="list-group-item">
-                            <span class="badge bg-danger">DELETE</span> /api/posts/&lt;post_id&gt; *Token Auth Required
+<form method="POST" action="{{ url_for('process_form') }}">
+    <label for="username">Username:</label>
+    <input type="text" name="username" id="username">
+    <button type="submit">Submit</button>
+</form>
                         </li>
                     </ul>
                 </div>

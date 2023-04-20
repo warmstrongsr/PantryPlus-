@@ -5,6 +5,7 @@ import SearchBtn from "../components/SearchBtn";
 import RecipeCard from "../components/RecipeCard";
 import Sidebar from "../components/Sidebar";
 
+
 export default function Home({ user, loggedIn }) {
 	const dummyData = [
 		{

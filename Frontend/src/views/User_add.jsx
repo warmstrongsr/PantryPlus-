@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function CreatePost({ loggedIn, flashMessage }) {
+export default function Add_Recipe({ loggedIn, flashMessage }) {
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -10,7 +10,6 @@ export default function CreatePost({ loggedIn, flashMessage }) {
 			navigate("/login");
 		}
 	});
-
 
 	async function handleSubmit(e) {
 		e.preventDefault();
@@ -28,14 +27,14 @@ export default function CreatePost({ loggedIn, flashMessage }) {
 		myHeaders.append("Authorization", `Bearer ${token}`);
 
 		// Set up the request body
-		let requestBody = JSON.stringify({ user_id , recipe_id });
+		let requestBody = JSON.stringify({ user_id, recipe_id });
 
 		// Make the fetch request
-		// let response = await fetch("http://localhost:5000/api/add_favorite", {
-		// 	method: "POST",
-		// 	headers: myHeaders,
-		// 	body: requestBody,
-		// });
+		let response = await fetch("http://localhost:5000/api/recipes", {
+			method: "POST",
+			headers: myHeaders,
+			body: requestBody
+		});
 
 		let data = await response.json();
 
@@ -49,25 +48,12 @@ export default function CreatePost({ loggedIn, flashMessage }) {
 
 	return (
 		<>
-			<h3 className="text-center">Create A Post!</h3>
+			<h3 className="text-center">Add a Recipe</h3>
 			<form action="" onSubmit={handleSubmit}>
 				<div className="form-group">
-					<input
-						type="text"
-						name="title"
-						className="form-control my-3"
-						placeholder="Enter Title"
-					/>
-					<textarea
-						name="content"
-						className="form-control my-3"
-						placeholder="Enter Body"
-					/>
-					<input
-						type="submit"
-						value="Create Post"
-						className="btn btn-success w-100"
-					/>
+					<button type="submit" className="btn btn-success w-100">
+						Add the Recipe
+					</button>
 				</div>
 			</form>
 		</>

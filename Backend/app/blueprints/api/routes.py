@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import Flask, jsonify, request, render_template
 from app.blueprints.api import api
 from app.blueprints.api.models import Recipe, User
 from app.blueprints.api.http_auth import basic_auth, token_auth
@@ -75,13 +75,7 @@ def me():
 @api.route('/recipes', methods=['POST'])
 @token_auth.login_required
 def create_recipe():
-    if not request.is_json:
-        return jsonify({'error': 'Please send a body'}), 400
     data = request.json
-    # Validate the data
-    for field in ['title', 'content']:
-        if field not in data:
-            return jsonify({'error': f"You are missing the {field} field"}), 400
     current_user = token_auth.current_user()
     data['user_id'] = current_user.id
     new_recipe = Recipe(**data)
@@ -125,3 +119,14 @@ def delete_recipe(recipe_id):
         return jsonify({'error': 'You are not allowed to edit this recipe'}), 403
     recipe.delete()
     return jsonify({'success': f'{recipe.title} has been deleted'})
+
+@api.route('/recipes/<int:recipe_id>/favorite', methods=['POST'])
+@token_auth.login_required
+def favorite_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    current_user = token_auth.current_user()
+    if current_user in recipe.favorites:
+        return jsonify({'error': 'Recipe already favorited'}), 400
+    recipe.favorites.append(current_user)
+    db.session.commit()
+    return jsonify({'success': f'{recipe.title} has been added to your favorites'})

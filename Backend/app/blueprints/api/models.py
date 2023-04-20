@@ -4,6 +4,11 @@ from datetime import datetime, timedelta
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
+favorites = db.Table(
+    'favorites',
+    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,7 +18,7 @@ class User(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     token = db.Column(db.String(32), unique=True, index=True)
     token_expiration = db.Column(db.DateTime)
-    recipe = db.relationship('Recipe', backref='author', lazy='dynamic')
+    recipe = db.relationship('Recipe', backref='author', lazy=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -57,40 +62,19 @@ class User(db.Model):
             else:
                 setattr(self, field, data[field])
         db.session.commit()
-        
-
+            
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow )
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        db.session.add(self)
-        db.session.commit()
-
-    def __repr__(self):
-        return f"<Recipe {self.id}|{self.title}>"
+    favorites = db.relationship('User', secondary=favorites, lazy='subquery',
+        backref=db.backref('favorites', lazy=True))
 
     def to_dict(self):
         return {
             'id': self.id,
             'title': self.title,
             'date_created': self.date_created,
-            'author': User.query.get(self.user_id).to_dict(), 
-            # 'is_favorite': True if self.user_id in self.favorites else False
+            'favorites_count': len(self.favorites)
         }
-
-    def update(self, data):
-        for field in data:
-            if field not in {'title', 'content', 'user_id'}:
-                continue
-            setattr(self, field, data[field])
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-        

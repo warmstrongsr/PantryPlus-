@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { addRecipe, addRecipeToFavorites } from "../api";
 
 export default function LinkCard({ recipe, user, image, summary }) {
+	const [isFavorite, setIsFavorite] = useState(false);
+
+	const addRecipeToFavorites = async () => {
+		try {
+			const newFavorite = await addRecipeToFavorites(recipe);
+			setIsFavorite(true);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	return (
 		<>
 			<div className="card mt-3">
@@ -30,17 +42,15 @@ export default function LinkCard({ recipe, user, image, summary }) {
 								View on Spoonacular
 							</a>
 
-							<a
-								href={`https://spoonacular.com/recipes/${recipe.title
-									.split(" ")
-									.join("-")}-${recipe.id}`}
-								target="_blank"
-								rel="noopener noreferrer"
+							<button
+								onClick={addRecipeToFavorites}
 								className="btn btn-primary w-40"
 								style={{ width: 150, marginLeft: 30 }}
+								disabled={isFavorite}
 							>
-								Favorite this Recipe
-							</a>
+								{isFavorite ? "Favorited" : "Favorite this Recipe"}
+							</button>
+
 							{recipe.author && recipe.author.username === user.username ? (
 								<>
 									<Link

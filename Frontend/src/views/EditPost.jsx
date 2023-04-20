@@ -28,7 +28,7 @@ export default function EditPost({ loggedIn, flashMessage }) {
 		editPost();
 		async function editPost() {
 			const title = e.target.title.value;
-			const content = e.target.content.value;
+			
 
 			let formData = JSON.stringify({ title, content });
 
@@ -38,9 +38,7 @@ export default function EditPost({ loggedIn, flashMessage }) {
 			myHeaders.append("Content-Type", "application/json");
 			myHeaders.append("Authorization", `Bearer ${token}`);
 
-			let response = await fetch(
-				`https://kekambas-blog-api.onrender.com/api/posts/${postId}`,
-				{
+			let response = await fetch(`/api/posts/${post.id}`,{
 					method: "PUT",
 					headers: myHeaders,
 					body: formData,
@@ -63,9 +61,7 @@ export default function EditPost({ loggedIn, flashMessage }) {
 		let myHeaders = new Headers();
 		myHeaders.append("Authorization", `Bearer ${token}`);
 
-		let response = await fetch(
-			`https://kekambas-blog-api.onrender.com/api/posts/${postId}`,
-			{
+		let response = await fetch(`/api/posts/${post.id}`,{
 				method: "DELETE",
 				headers: myHeaders,
 			}
