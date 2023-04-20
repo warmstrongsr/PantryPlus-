@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { API_KEY } from "../components/secrets/apikey";
 import SearchBtn from "../components/SearchBtn";
 import RecipeCard from "../components/RecipeCard";
+import LinkCard from "../components/LinkCard";
 import Sidebar from "../components/Sidebar";
 
 
@@ -194,7 +195,7 @@ export default function Home({ user, loggedIn }) {
 					.filter((post) => !onlyMine || post.author.username === user.username)
 					.slice(firstPostIndex, lastPostIndex)
 					.map((post) => (
-						<RecipeCard
+						<LinkCard
 							key={post.id}
 							recipe={post}
 							user={user}

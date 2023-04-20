@@ -4,11 +4,15 @@ from datetime import datetime, timedelta
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
-favorites = db.Table(
-    'favorites',
-    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
-)
+class Favorite(db.Model):
+    recipe_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    favorite_id = db.Column(db.Integer, primary_key=True)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        db.session.add(self)
+        db.session.commit()
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,7 +22,7 @@ class User(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     token = db.Column(db.String(32), unique=True, index=True)
     token_expiration = db.Column(db.DateTime)
-    recipe = db.relationship('Recipe', backref='author', lazy=True)
+    favorites = db.relationship('Favorite', backref='author', lazy=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -63,18 +67,3 @@ class User(db.Model):
                 setattr(self, field, data[field])
         db.session.commit()
             
-class Recipe(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200))
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    favorites = db.relationship('User', secondary=favorites, lazy='subquery',
-        backref=db.backref('favorites', lazy=True))
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'date_created': self.date_created,
-            'favorites_count': len(self.favorites)
-        }

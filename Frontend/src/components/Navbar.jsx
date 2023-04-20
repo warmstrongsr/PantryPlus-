@@ -32,7 +32,11 @@ export default function Navbar({ loggedIn, logUserOut }) {
 									Favorite Recipes
 								</Link>
 
-								<Link className="nav-link" to="/users">
+								<Link className="nav-link" to="/me2">
+									User Info
+								</Link>
+								
+								<Link className="nav-link" to="/me2">
 									User Info
 								</Link>
 							

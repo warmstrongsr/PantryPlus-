@@ -17,7 +17,7 @@ export default function UserInfoForm({ flashMessage }) {
 		myHeaders.append("Authorization", `Basic ${btoa(stringToEncode)}`);
 
 		// Make a request to update the user's info
-		let response = await fetch(`/api/posts/${post.id}`, {
+		let response = await fetch(`/api/me2/${user.id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

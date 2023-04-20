@@ -39,7 +39,7 @@ export default function Sidebar({
 								<button
 									className="btn btn-success w-49"
 									onClick={() => setPage(page + 1)}
-									style={{ width: 250, marginBottom: 10 }}
+									style={{ width: 530, marginBottom: 10 }}
 								>
 									Page Up
 								</button>
@@ -50,7 +50,7 @@ export default function Sidebar({
 								<button
 									className="btn btn-danger w-49"
 									onClick={() => setPage(page - 1)}
-									style={{ width: 250 }}
+									style={{ width: 530 }}
 								>
 									Page Down
 								</button>

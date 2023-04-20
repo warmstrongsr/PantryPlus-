@@ -1,7 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from app.blueprints.api import api
-from app.blueprints.api.models import Recipe, User
+from app.blueprints.api.models import User, Favorite
 from app.blueprints.api.http_auth import basic_auth, token_auth
+from app import db
+
+
 
 
 # Login - Get Token with Username/Password in header
@@ -70,6 +73,13 @@ def delete_user(id):
 def me():
     return token_auth.current_user().to_dict()
 
+# Add a recipe to favorites for the current user
+@api.route('/recipes/<int:recipe_id>/favorite', methods=['POST'])
+@token_auth.login_required
+def add_recipe_to_favorites(recipe_id):
+    current_user = token_auth.current_user()
+    new_favorite = Favorite(user_id=current_user.id, recipe_id=recipe_id)
+    return jsonify({'message': f'Recipe {recipe_id} added to favorites for user {current_user.id}'}), 200
 
 # Create a recipe 
 @api.route('/recipes', methods=['POST'])
@@ -120,13 +130,3 @@ def delete_recipe(recipe_id):
     recipe.delete()
     return jsonify({'success': f'{recipe.title} has been deleted'})
 
-@api.route('/recipes/<int:recipe_id>/favorite', methods=['POST'])
-@token_auth.login_required
-def favorite_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
-    current_user = token_auth.current_user()
-    if current_user in recipe.favorites:
-        return jsonify({'error': 'Recipe already favorited'}), 400
-    recipe.favorites.append(current_user)
-    db.session.commit()
-    return jsonify({'success': f'{recipe.title} has been added to your favorites'})

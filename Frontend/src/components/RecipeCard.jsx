@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { addRecipe, addRecipeToFavorites } from "../api";
+import { addRecipe, handleAddRecipeToFavorites } from "../api";
+
 
 export default function LinkCard({ recipe, user, image, summary }) {
 	const [isFavorite, setIsFavorite] = useState(false);
 
-	const addRecipeToFavorites = async () => {
+	const handleAddToFavorites = async () => {
 		try {
-			const newFavorite = await addRecipeToFavorites(recipe);
+			const result = await handleAddRecipeToFavorites(recipe.id);
 			setIsFavorite(true);
 		} catch (error) {
 			console.error(error);
@@ -27,7 +28,18 @@ export default function LinkCard({ recipe, user, image, summary }) {
 							<h6 className="card-subtitle text">{recipe.date_created}</h6>
 							<p className="card-text">{recipe.summary}</p>
 							<p className="card-text">
-								<strong>Ingredients:</strong> {recipe.title}
+								<strong>Options:</strong> {recipe.title}
+								{recipe.user_id === user.id ? (
+									<>
+										<Link
+											to={`${recipe.id}`}
+											className="btn btn-success w-60 ml-4 mt-0"
+											style= {{ marginLeft: 7 }} 
+										>
+											Edit
+										</Link>
+									</>
+								) : null}
 							</p>
 
 							<a
@@ -43,24 +55,13 @@ export default function LinkCard({ recipe, user, image, summary }) {
 							</a>
 
 							<button
-								onClick={addRecipeToFavorites}
+								onClick={addRecipe}
 								className="btn btn-primary w-40"
 								style={{ width: 150, marginLeft: 30 }}
 								disabled={isFavorite}
 							>
 								{isFavorite ? "Favorited" : "Favorite this Recipe"}
 							</button>
-
-							{recipe.author && recipe.author.username === user.username ? (
-								<>
-									<Link
-										to={`${recipe.id}`}
-										className="btn btn-success w-60 mt-4"
-									>
-										Edit
-									</Link>
-								</>
-							) : null}
 						</div>
 					</div>
 				</div>
