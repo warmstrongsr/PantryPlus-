@@ -15,9 +15,9 @@ export default function SearchBtn({ handleSubmit }) {
 
 	return (
 		<>
-			<div className="hero-image">
+			<div className="IngredientsSearch">
 				<div className="bg">
-					<div className="lightning flashit">
+					
 						
 						<div className="container">
 							{/* <!-- Header Row --> */}
@@ -27,14 +27,14 @@ export default function SearchBtn({ handleSubmit }) {
 								</div>
 							</div>
 							{/* <!-- Form Row --> */}
-							<div className="row mt-5 mb-3">
+							<div className="row mt-4 mb-3">
 								<form onSubmit={handleFormSubmit} id="ingredientForm">
 									<div className="form-group form-inline">
 										<input
 											type="text"
 											name="city"
 											className="form-control w-100"
-											placeholder="Start entering your items."
+											placeholder="Ingredients"
 											value={inputValue}
 											onChange={handleInputChange}
 										/>
@@ -42,7 +42,7 @@ export default function SearchBtn({ handleSubmit }) {
 											<input
 												type="submit"
 												value="Submit"
-												className="btn btn-outline-light btn-secondary w-100 mt-3 mb-3"
+												className="btn btn-outline-light  w-100 mt-3 mb-3"
 											/>
 										</div>
 									</div>
@@ -51,7 +51,6 @@ export default function SearchBtn({ handleSubmit }) {
 						</div>
 					</div>
 				</div>
-			</div>
 		</>
 	);
 }

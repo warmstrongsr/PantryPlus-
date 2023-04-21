@@ -53,7 +53,7 @@ export default function UserData({ flashMessage, user, post, logUserIn }) {
 		myHeaders.append("Authorization", `Basic ${btoa(stringToEncode)}`);
 
 		// Make a request to delete the user's account
-		let response = await fetch(`/api/posts/${post.id}`, {
+		let response = await fetch(`/api/users/${user.id}`, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
@@ -125,12 +125,25 @@ export default function UserData({ flashMessage, user, post, logUserIn }) {
 									onChange={(e) => setNewPassword(e.target.value)}
 								/>
 							</div>
-							<button className="btn btn-success mr-3" type="submit">
-								Update
-							</button>
-							<button className="btn btn-danger" onClick={handleDeleteUser}>
-								Delete Account
-							</button>
+							<div style={{ display: "flex", justifyContent: "center" }}>
+						
+								<button
+									className="btn btn-success "
+									type="submit"
+									style={{ width: 500, marginRight: 50 }}
+								
+								>
+									Update Account
+								</button>
+								<button
+									className="btn btn-danger"
+									onClick={handleDeleteUser}
+									style={{ width: 500, marginLeft: 50 }}
+									
+								>
+									Delete Account
+								</button>
+						</div>
 						</form>
 					</div>
 				</div>
@@ -138,3 +151,5 @@ export default function UserData({ flashMessage, user, post, logUserIn }) {
 		</div>
 	);
 }
+
+									

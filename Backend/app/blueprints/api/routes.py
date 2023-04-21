@@ -78,7 +78,7 @@ def get_user(user_id):
     return jsonify(user.to_dict())
 
 # Get all users recipes
-@api.route('/favorites/<int:user_id>')
+@api.route('/favorites')
 @token_auth.login_required
 def get_favorites():
     favorites = Favorite.query.all()

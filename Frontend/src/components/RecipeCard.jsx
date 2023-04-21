@@ -19,11 +19,11 @@ export default function LinkCard({ recipe, user, image, summary }) {
 		<>
 			<div className="card mt-3">
 				<div className="card-header">{recipe.title}</div>
-				<div className="row g-0">
-					<div className="col-md-4">
+				<div className="row g-">
+					<div className="col-md-3">
 						<img className="card-img-top" src={image} alt={recipe.title} />
 					</div>
-					<div className="col-md-8">
+					<div className="col-md-3">
 						<div className="card-body">
 							<h6 className="card-subtitle text">{recipe.date_created}</h6>
 							<p className="card-text">{recipe.summary}</p>

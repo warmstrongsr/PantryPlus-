@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export default function Sidebar({
 	page,
 	setPage,
+	recipes,
 	posts,
 	onlyMine,
 	setOnlyMine,
@@ -20,7 +21,7 @@ export default function Sidebar({
 							<button
 								className="btn btn-success w-49"
 								onClick={() => setPage(page + 1)}
-								style={{ width: 530, marginBottom: 10 }}
+								style={{ width: 150, marginBottom: 10 }}
 							>
 								Page Up
 							</button>
@@ -31,7 +32,7 @@ export default function Sidebar({
 							<button
 								className="btn btn-danger w-49"
 								onClick={() => setPage(page - 1)}
-								style={{ width: 530 }}
+								style={{ width: 150 }}
 							>
 								Page Down
 							</button>
@@ -39,19 +40,7 @@ export default function Sidebar({
 					</div>{" "}
 				</div>
 			</div>
-			{loggedIn ? (
-				<div className="card mt-3">
-					<div className="card-body">
-						<Link
-							to="/user/recipes"
-							className="btn btn-success w-100"
-							onClick={() => setOnlyMine(!onlyMine)}
-						>
-							{loggedIn && onlyMine ? "See All Posts" : "See Only My List"}
-						</Link>
-					</div>
-				</div>
-			) : null}
+		
 		</>
 	);
 }

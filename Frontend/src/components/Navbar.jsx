@@ -1,14 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
+import SearchBtn from "../components/SearchBtn";
 
-export default function Navbar({ loggedIn, logUserOut }) {
+export default function Navbar({
+	loggedIn,
+	logUserOut,
+	posts,
+	onlyMine,
+	setOnlyMine,
+	lastPostIndex,
+}) {
 	// console.log(props);
 	// console.log(typeof props);
 	return (
 		<nav className="navbar navbar-expand-lg bg-body-tertiary">
 			<div className="container-fluid">
 				<Link className="navbar-brand" to="/">
-					Eat UP!
+					Pantry Plus!
 				</Link>
 				<button
 					className="navbar-toggler"
@@ -32,18 +41,19 @@ export default function Navbar({ loggedIn, logUserOut }) {
 									Favorites
 								</Link>
 
-								<Link className="nav-link" to="{`/userdata`}">
+								<Link className="nav-link" to="/me">
 									User Info
 								</Link>
 
 								<Link className="nav-link" to="/list">
-									Edit list
+									Edit | Delete
 								</Link>
-								
-							
+
 								<Link className="nav-link" to="/" onClick={() => logUserOut()}>
 									Log Out
 								</Link>
+								
+								
 							</>
 						) : (
 							<>
@@ -59,5 +69,7 @@ export default function Navbar({ loggedIn, logUserOut }) {
 				</div>
 			</div>
 		</nav>
+		
+
 	);
 }
