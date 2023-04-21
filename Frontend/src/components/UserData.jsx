@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function UserInfoForm({ flashMessage }) {
+export default function UserData({ flashMessage, user, post, logUserIn }) {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -17,7 +17,7 @@ export default function UserInfoForm({ flashMessage }) {
 		myHeaders.append("Authorization", `Basic ${btoa(stringToEncode)}`);
 
 		// Make a request to update the user's info
-		let response = await fetch(`/api/me2/${user.id}`, {
+		let response = await fetch(`/api/me/${user.id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

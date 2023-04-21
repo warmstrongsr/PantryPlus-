@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-export default function setFavorite(recipeID, loggedIn, flashMessage, navigate) {
+export default function Favorite(user_id, loggedIn, flashMessage, navigate) {
 	if (!loggedIn) {
 		flashMessage("You must be logged in to set a recipe as favorite", "danger");
 
@@ -10,8 +10,8 @@ export default function setFavorite(recipeID, loggedIn, flashMessage, navigate) 
 		return;
 	}
 
-	fetch(`/favorites/${recipeID}`, {
-		method: "POST",
+	fetch(`/favorites`, {
+		method: "GET",
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -24,38 +24,9 @@ export default function setFavorite(recipeID, loggedIn, flashMessage, navigate) 
 		.catch((error) => console.error(error));
 }
 
-export default function Favorites({
-	recipe,
-	user,
-	image,
-	loggedIn,
-	flashMessage,
-}) {
-	const navigate = useNavigate();
-
-	const removeFavorite = (recipeID) => {
-		if (!loggedIn) {
-			flashMessage(
-				"You must be logged in to remove a recipe from favorites",
-				"danger"
-			);
-			navigate("/login");
-			return;
-		}
-
-		fetch(`/favorites/${recipeID}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((error) => console.error(error));
-	};
+	function Favorites({ user,image,loggedIn,flashMessage }) {
+		const [favorites, setFavorites] = useState([]);
+		const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!loggedIn) {
@@ -64,51 +35,83 @@ export default function Favorites({
 				"danger"
 			);
 			navigate("/login");
+			return;
 		}
-	}, [loggedIn, flashMessage, navigate]);
+	Favorite(user.id, loggedIn, flashMessage, navigate).then((data) => {
+      setFavorites(data);
+    });
+  }, [user, loggedIn, flashMessage, navigate]);
+
+  const removeFavorite = (recipeID) => {
+    if (!loggedIn) {
+      flashMessage(
+        "You must be logged in to remove a recipe from favorites",
+        "danger"
+      );
+      navigate("/login");
+      return;
+    }
+
+    fetch(`/favorites/${recipeID}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setFavorites(favorites.filter((recipe) => recipe.id !== recipeID));
+      })
+      .catch((error) => console.error(error));
+  };
+
+  return (
+    <div>
+      <h2>My Favorites</h2>
+      {favorites.map((recipe) => (
+        <FavoriteItem
+          key={recipe.id}
+          recipe={recipe}
+          removeFavorite={removeFavorite}
+        />
+      ))}
+    </div>
+  );
+}
+
+function FavoriteItem({ recipe, removeFavorite }) {
+	const navigate = useNavigate();
 
 	return (
 		<div className="card mt-3">
 			<div className="card-header">{recipe.title}</div>
 			<div className="row g-0">
 				<div className="col-md-4">
-					<img className="card-img-top" src={image} alt={recipe.title} />
+					<img className="card-img-top" src={recipe.image} alt={recipe.title} />
 				</div>
 				<div className="col-md-8">
 					<div className="card-body">
 						<h6 className="card-subtitle text">{recipe.date_created}</h6>
-						<p className="card-text">{recipe.content}</p>
-						<p className="card-text">
-							<strong>Ingredients:</strong> {recipe.ingredients}
-						</p>
-						<button
-							onClick={() =>
-								setFavorite(recipe.id, loggedIn, flashMessage, navigate)
-							}
-						>
-							Set Favorite
-						</button>
-
-						<a
-							href={`https://spoonacular.com/recipes/${recipe.title
-								.split(" ")
-								.join("-")}-${recipe.id}`}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="btn btn-primary"
-						>
-							View on Spoonacular
-						</a>
-						{recipe.author && recipe.author.username === user.username ? (
-							<>
-								<Link to={`${recipe.id}`} className="btn btn-success w-80 mt-4">
-									Edit
-								</Link>
-							</>
-						) : null}
 					</div>
 				</div>
+			</div>
+			<div className="card-footer">
+				<button
+					className="btn btn-danger"
+					onClick={() => removeFavorite(recipe.id)}
+				>
+					Remove
+				</button>
+				<button
+					className="btn btn-primary ms-2"
+					onClick={() => navigate(`/recipe/${recipe.id}`)}
+				>
+					View Recipe
+				</button>
 			</div>
 		</div>
 	);
 }
+	

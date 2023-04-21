@@ -1,8 +1,5 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import LinkCard from "../components/LinkCard";
-import Sidebar from "../components/Sidebar";
 
 export default function EditPost({ loggedIn, flashMessage }) {
 	const { postId } = useParams();
@@ -19,7 +16,9 @@ export default function EditPost({ loggedIn, flashMessage }) {
 
 	useEffect(() => {
 		async function fetchPostData() {
-			let response = await fetch(`http://localhost:5000/api/recipes`);
+			let response = await fetch(
+				`https://kekambas-blog-api.onrender.com/api/posts/${postId}`
+			);
 			let data = await response.json();
 			setPost(data);
 		}
@@ -31,6 +30,7 @@ export default function EditPost({ loggedIn, flashMessage }) {
 		editPost();
 		async function editPost() {
 			const title = e.target.title.value;
+			const content = e.target.content.value;
 
 			let formData = JSON.stringify({ title, content });
 
@@ -40,11 +40,14 @@ export default function EditPost({ loggedIn, flashMessage }) {
 			myHeaders.append("Content-Type", "application/json");
 			myHeaders.append("Authorization", `Bearer ${token}`);
 
-			let response = await fetch(`/api/posts/${post.id}`, {
-				method: "PUT",
-				headers: myHeaders,
-				body: formData,
-			});
+			let response = await fetch(
+				`https://kekambas-blog-api.onrender.com/api/posts/${postId}`,
+				{
+					method: "PUT",
+					headers: myHeaders,
+					body: formData,
+				}
+			);
 
 			let data = await response.json();
 
@@ -62,10 +65,13 @@ export default function EditPost({ loggedIn, flashMessage }) {
 		let myHeaders = new Headers();
 		myHeaders.append("Authorization", `Bearer ${token}`);
 
-		let response = await fetch(`/api/posts/${post.id}`, {
-			method: "DELETE",
-			headers: myHeaders,
-		});
+		let response = await fetch(
+			`https://kekambas-blog-api.onrender.com/api/posts/${postId}`,
+			{
+				method: "DELETE",
+				headers: myHeaders,
+			}
+		);
 
 		let data = await response.json();
 
@@ -134,8 +140,8 @@ export default function EditPost({ loggedIn, flashMessage }) {
 								></button>
 							</div>
 							<div className="modal-body">
-								Are you sure you want to delete {recipe.title}? This action
-								cannot be undone.
+								Are you sure you want to delete {post.title}? This action cannot
+								be undone.
 							</div>
 							<div className="modal-footer">
 								<button

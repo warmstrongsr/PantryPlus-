@@ -17,7 +17,9 @@ export default function LinkCard({ recipe, user, image, summary }) {
 	return (
 		<>
 			<div className="card mt-3">
-				<div className="card-header">{recipe.title}</div>
+				<div className="card-header">
+					<strong>{recipe.title}</strong>
+				</div>
 				<div className="row g-0">
 					<div className="col-md-4">
 						<img className="card-img-top" src={image} alt={recipe.title} />
@@ -27,11 +29,11 @@ export default function LinkCard({ recipe, user, image, summary }) {
 							<h6 className="card-subtitle text">{recipe.date_created}</h6>
 							<p className="card-text">{recipe.summary}</p>
 							<p className="card-text">
-								<strong>Options:</strong> {recipe.title}
+								<strong>Recipe ID:</strong> {recipe.id}
 								{recipe.user_id === user.id ? (
 									<>
 										<Link
-											to={`${recipe.id}`}
+											to={`/edit/${recipe.id}`}
 											className="btn btn-success w-60 ml-4 mt-0"
 											style={{ marginLeft: 7 }}
 										>

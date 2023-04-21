@@ -29,16 +29,17 @@ export default function Navbar({ loggedIn, logUserOut }) {
 						{loggedIn ? (
 							<>
 								<Link className="nav-link" to="/favorites">
-									Favorite Recipes
+									Favorites
 								</Link>
 
-								<Link className="nav-link" to="/me2">
+								<Link className="nav-link" to="{`/userdata`}">
 									User Info
+								</Link>
+
+								<Link className="nav-link" to="/list">
+									Edit list
 								</Link>
 								
-								<Link className="nav-link" to="/me2">
-									User Info
-								</Link>
 							
 								<Link className="nav-link" to="/" onClick={() => logUserOut()}>
 									Log Out

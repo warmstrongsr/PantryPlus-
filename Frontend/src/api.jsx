@@ -6,6 +6,27 @@ const getRecipes = async () => {
 	return data;
 };
 
+const removeRecipeFromFavorites = async (recipeId) => {
+	const token = localStorage.getItem("token");
+	if (!token) {
+		throw new Error("User is not logged in.");
+	}
+
+	const response = await fetch(
+		`${API_BASE_URL}/api/recipes/${recipeId}/favorite`,
+		{
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		}
+	);
+
+	const data = await response.json();
+	return data;
+};
+
 // const addRecipe = async (recipe) => {
 // 	const response = await fetch(`${API_BASE_URL}/recipes`, {
 // 		method: "POST",

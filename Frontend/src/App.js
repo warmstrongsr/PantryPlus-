@@ -6,7 +6,9 @@ import Signup from "./views/Signup";
 import AlertMessage from "./components/AlertMessage";
 import Navbar from "./components/Navbar";
 import Create from "./views/CreatePost";
-import EditPost from "./views/EditRecipe";
+import UserData from "./components/UserData";
+import EditRecipe from "./views/EditRecipe";
+import Favorites from "./views/Favorites";
 
 export default function App() {
 	const [loggedIn, setLoggedIn] = useState(localStorage.getItem("token") ? true : false);
@@ -61,8 +63,11 @@ export default function App() {
                     <Route path='/' element={<Home user={user} loggedIn={loggedIn} />} />
                     <Route path='/signup' element={<Signup flashMessage={flashMessage} />} />
                     <Route path='/login' element={<Login flashMessage={flashMessage} logUserIn={logUserIn}/>} />
+                    <Route path='/me' element={<UserData flashMessage={flashMessage} loggedIn={loggedIn}/>} />
                     <Route path='/create' element={<Create flashMessage={flashMessage} loggedIn={loggedIn} />} />
-                    <Route path='/edit/:postId' element={<EditPost flashMessage={flashMessage} loggedIn={loggedIn} />} />
+                    <Route path='/edit/:recipeId' element={<EditRecipe flashMessage={flashMessage} loggedIn={loggedIn} />} />
+                    <Route path='/favorites' element={<Favorites flashMessage={flashMessage} loggedIn={loggedIn} />} />
+                    <Route path='/list/' element={<EditRecipe flashMessage={flashMessage} loggedIn={loggedIn} />} />
                 </Routes>
             </div>
         </>

@@ -5,8 +5,6 @@ from app.blueprints.api.http_auth import basic_auth, token_auth
 from app import db
 
 
-
-
 # Login - Get Token with Username/Password in header
 @api.route('/token', methods=['POST'])
 @basic_auth.login_required
@@ -43,7 +41,7 @@ def create_user():
 
 
 # Update a user by id 
-@api.route('/users/<int:id>', methods=['PUT'])
+@api.route('/user/<int:id>', methods=['PUT'])
 @token_auth.login_required
 def updated_user(id):
     current_user = token_auth.current_user()
@@ -73,6 +71,20 @@ def delete_user(id):
 def me():
     return token_auth.current_user().to_dict()
 
+@api.route('/users/<int:user_id>')
+@token_auth.login_required
+def get_user(user_id):
+    user = User.query.get_or_404(user_id)
+    return jsonify(user.to_dict())
+
+# Get all users recipes
+@api.route('/favorites/<int:user_id>')
+@token_auth.login_required
+def get_favorites():
+    favorites = Favorite.query.all()
+    return jsonify([f.to_dict() for f in favorites])
+
+
 # Add a recipe to favorites for the current user
 @api.route('/recipes/<int:recipe_id>/favorite', methods=['POST'])
 @token_auth.login_required
@@ -81,49 +93,13 @@ def add_recipe_to_favorites(recipe_id):
     new_favorite = Favorite(user_id=current_user.id, recipe_id=recipe_id)
     return jsonify({'message': f'Recipe {recipe_id} added to favorites for user {current_user.id}'}), 200
 
-# Create a recipe 
-@api.route('/recipes', methods=['POST'])
-@token_auth.login_required
-def create_recipe():
-    data = request.json
-    current_user = token_auth.current_user()
-    data['user_id'] = current_user.id
-    new_recipe = Recipe(**data)
-    return jsonify(new_recipe.to_dict()), 201
-
-
-# Get all recipes
-@api.route('/recipes')
-def get_recipes():
-    recipes = Recipe.query.all()
-    return jsonify([r.to_dict() for r in recipes])
-
-
-# Get a single recipe with id
-@api.route('/recipes/<int:recipe_id>')
-def get_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
-    return jsonify(recipe.to_dict())
-
-
-# Update a single recipe with id
-@api.route('/recipes/<int:recipe_id>', methods=['PUT'])
-@token_auth.login_required
-def update_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
-    user = token_auth.current_user()
-    if user.id != recipe.user_id:
-        return jsonify({'error': 'You are not allowed to edit this recipe'}), 403
-    data = request.json
-    recipe.update(data)
-    return jsonify(recipe.to_dict())
 
 
 # Delete a single recipe with id
-@api.route('/recipes/<int:recipe_id>', methods=['DELETE'])
+@api.route('/recipes/<int:recipe_id>/favorite', methods=['DELETE'])
 @token_auth.login_required
 def delete_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
+    recipe = recipe.query.get_or_404(recipe_id)
     user = token_auth.current_user()
     if user.id != recipe.user_id:
         return jsonify({'error': 'You are not allowed to edit this recipe'}), 403
