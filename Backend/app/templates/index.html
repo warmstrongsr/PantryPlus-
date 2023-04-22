@@ -16,7 +16,7 @@
 
     <div class="container">
         
-<form method="POST" action="{{ url_for('process_form') }}">
+<form method="POST" action="{{ url_for('api.get_favorites') }}">
     <label for="username">Username:</label>
     <input type="text" name="username" id="username">
     <button type="submit">Submit</button>
