@@ -146,7 +146,7 @@ export default function LinkCard({
 									{recipe.user_id === user.id ? (
 										<>
 											<Link
-												to={`/edit/${recipe.id}`}
+												to={`/delete/${recipe.id}`}
 												className="btn btn-outline-danger w-60 ml-4 mt-2"
 												style={{
 													display: "flex",

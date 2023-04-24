@@ -5,9 +5,10 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class Favorite(db.Model):
-    recipe_id = db.Column(db.Integer)
+    recipe_id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow )
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    favorite_id = db.Column(db.Integer, primary_key=True)
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         db.session.add(self)

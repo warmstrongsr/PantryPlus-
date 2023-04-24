@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-export default function Favorite(user_id, loggedIn, flashMessage, navigate) {
+export default function Favorite({ user_id, loggedIn, flashMessage }) {
+	const navigate = useNavigate();
+
 	if (!loggedIn) {
 		flashMessage("You must be logged in to set a recipe as favorite", "danger");
 
 		navigate("/login");
-		return;
+		return null;
 	}
 
 	fetch(`/favorites`, {
@@ -22,11 +23,12 @@ export default function Favorite(user_id, loggedIn, flashMessage, navigate) {
 			console.log(data);
 		})
 		.catch((error) => console.error(error));
+return null;
 }
 
-	function Favorites({ user,image,loggedIn,flashMessage }) {
-		const [favorites, setFavorites] = useState([]);
-		const navigate = useNavigate();
+function Favorites({ user, loggedIn, flashMessage }) {
+	const [favorites, setFavorites] = useState([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!loggedIn) {
@@ -37,81 +39,108 @@ export default function Favorite(user_id, loggedIn, flashMessage, navigate) {
 			navigate("/login");
 			return;
 		}
-	Favorite(user.id, loggedIn, flashMessage, navigate).then((data) => {
-      setFavorites(data);
-    });
-  }, [user, loggedIn, flashMessage, navigate]);
+		Favorite(user.id, loggedIn, flashMessage, navigate).then((data) => {
+			setFavorites(data);
+		});
+	}, [user, loggedIn, flashMessage, navigate]);
 
-  const removeFavorite = (recipeID) => {
-    if (!loggedIn) {
-      flashMessage(
-        "You must be logged in to remove a recipe from favorites",
-        "danger"
-      );
-      navigate("/login");
-      return;
-    }
+	const removeFavorite = (recipeID) => {
+		if (!loggedIn) {
+			flashMessage(
+				"You must be logged in to add/remove a recipe from favorites",
+				"danger"
+			);
+			navigate("/login");
+			return;
+		}
 
-    fetch(`/favorites/${recipeID}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setFavorites(favorites.filter((recipe) => recipe.id !== recipeID));
-      })
-      .catch((error) => console.error(error));
-  };
+		const isFavorite = favorites.some(
+			(favorite) => favorite.recipe_id === recipeID
+		);
+		if (isFavorite) {
+			fetch(`/favorites/${recipeID}`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data);
+					setFavorites(
+						favorites.filter((favorite) => favorite.recipe_id !== recipeID)
+					);
+				})
+				.catch((error) => console.error(error));
+		} else {
+			fetch(`/favorites`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({
+					recipe_id: recipeID,
+				}),
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data);
+					setFavorites([
+						...favorites,
+						{ recipe_id: recipeID, date_created: data.date_created },
+					]);
+					console.log("Updated favorites:", favorites);
+				})
+				.catch((error) => console.error(error));
+		}
+	};
 
-  return (
-    <div>
-      <h2>My Favorites</h2>
-      {favorites.map((recipe) => (
-        <FavoriteItem
-          key={recipe.id}
-          recipe={recipe}
-          removeFavorite={removeFavorite}
-        />
-      ))}
-    </div>
-  );
+	return (
+		<div>
+			<h2>My Favorites</h2>
+			{favorites.map((recipe) => (
+				<FavoriteItem
+					key={recipe.id}
+					recipe={recipe}
+					removeFavorite={removeFavorite}
+				/>
+			))}
+		</div>
+	);
 }
 
 function FavoriteItem({ recipe, removeFavorite }) {
 	const navigate = useNavigate();
 
+	const handleFavorite = () => {
+		removeFavorite(recipe.id);
+	};
+
+	const handleViewRecipe = () => {
+		navigate(`/recipes/${recipe.id}`);
+	};
+
 	return (
 		<div className="card mt-3">
 			<div className="card-header">{recipe.title}</div>
-			<div className="row g-0">
+			<div className="row">
 				<div className="col-md-4">
-					<img className="card-img-top" src={recipe.image} alt={recipe.title} />
+					<img src={recipe.image_url} alt={recipe.title} className="w-100" />
 				</div>
 				<div className="col-md-8">
 					<div className="card-body">
-						<h6 className="card-subtitle text">{recipe.date_created}</h6>
+						<p className="card-text">{recipe.description}</p>
+						<button className="btn btn-primary me-2" onClick={handleViewRecipe}>
+							View Recipe
+						</button>
+						<button className="btn btn-danger" onClick={handleFavorite}>
+							Remove from Favorites
+						</button>
 					</div>
 				</div>
-			</div>
-			<div className="card-footer">
-				<button
-					className="btn btn-danger"
-					onClick={() => removeFavorite(recipe.id)}
-				>
-					Remove
-				</button>
-				<button
-					className="btn btn-primary ms-2"
-					onClick={() => navigate(`/recipe/${recipe.id}`)}
-				>
-					View Recipe
-				</button>
 			</div>
 		</div>
 	);
 }
-	

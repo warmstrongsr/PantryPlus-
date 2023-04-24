@@ -68,6 +68,7 @@ export default function App() {
                     <Route path='/edit/:recipeId' element={<EditRecipe flashMessage={flashMessage} loggedIn={loggedIn} />} />
                     <Route path='/favorites' element={<Favorites flashMessage={flashMessage} loggedIn={loggedIn} />} />
                     <Route path='/list/' element={<EditRecipe flashMessage={flashMessage} loggedIn={loggedIn} />} />
+                    <Route path='/delete/' element={<EditRecipe flashMessage={flashMessage} loggedIn={loggedIn} />} />
                 </Routes>
             </div>
         </>
